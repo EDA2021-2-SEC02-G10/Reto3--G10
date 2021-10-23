@@ -47,10 +47,11 @@ def loadData(analyzer):
     """
     Carga los datos de los archivos CSV en el modelo
     """
-    ufosfile = cf.data_dir + 'UFOS_utf8-small.csv'
+    ufosfile = cf.data_dir + 'UFOS-utf8-small.csv'
     input_file = csv.DictReader(open(ufosfile, encoding="utf-8"))
     for row in input_file:
-        a = 1
+        model.addUfo(analyzer, row['datetime'], row['city'], row['state'], row['country'], row['shape'],
+                     row['duration (seconds)'], row['duration (hours/min)'], row['date posted'], row['latitude'], row['longitude'])
     return analyzer
 
 # Funciones de ordenamiento

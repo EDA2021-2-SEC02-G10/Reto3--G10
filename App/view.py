@@ -22,6 +22,7 @@
 
 import config as cf
 import sys
+from DISClib.ADT import orderedmap as om
 import controller
 from DISClib.ADT import list as lt
 assert cf
@@ -54,6 +55,17 @@ while True:
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
         print("Cargando información de los archivos ....")
+        analyzer = controller.init()
+        controller.loadData(analyzer)
+        print('Se cargaron un total de ' + str(lt.size(analyzer['UFOS'])) + ' avistamientos')
+        print('Los primeros y ultimos 3 avistamientos cargados son: ')
+        print(lt.getElement(analyzer["UFOS"], 1))
+        print(lt.getElement(analyzer["UFOS"], 2))
+        print(lt.getElement(analyzer["UFOS"], 3))
+        print(lt.getElement(analyzer["UFOS"], -1))
+        print(lt.getElement(analyzer["UFOS"], -2))
+        print(lt.getElement(analyzer["UFOS"], -3))
+        print('La altura del arbol de ciudades es de :' + str(om.height(analyzer['cityIndex'])))
 
     elif int(inputs[0]) == 2:
         pass
