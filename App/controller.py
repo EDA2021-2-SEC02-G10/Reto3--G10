@@ -51,9 +51,14 @@ def loadData(analyzer):
     input_file = csv.DictReader(open(ufosfile, encoding="utf-8"))
     for row in input_file:
         model.addUfo(analyzer, row['datetime'], row['city'], row['state'], row['country'], row['shape'],
-                     row['duration (seconds)'], row['duration (hours/min)'], row['date posted'], row['latitude'], row['longitude'])
+                     (row['duration (seconds)']), row['duration (hours/min)'], row['date posted'], row['latitude'], row['longitude'])
     return analyzer
 
 # Funciones de ordenamiento
 
 # Funciones de consulta sobre el catálogo
+
+
+def findSightingsCity(analyzer, city):
+
+    return model.findSightingsCity(analyzer, city)

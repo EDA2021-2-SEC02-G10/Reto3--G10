@@ -35,6 +35,29 @@ se hace la solicitud al controlador para ejecutar la
 operación solicitada
 """
 
+
+def printFindCitySightings(result):
+
+    print('Hay ' + str(result[0]) + ' ciudades con avistamientos de UFOS')
+    sorted_list = result[1]
+    print('Las 5 ciudades con mas avistamientos son: ')
+    print(lt.getElement(sorted_list, lt.size(sorted_list)))
+    print(lt.getElement(sorted_list, -1))
+    print(lt.getElement(sorted_list, -2))
+    print(lt.getElement(sorted_list, -3))
+    print(lt.getElement(sorted_list, -4))
+    print('---------------------------------------------------------------------------------------------------')
+    print('Hay ' + str(result[2]) + ' avistamientos en la ciudad pedida')
+    print('Los primeros y ultimos 3 avistamientos cronologicamente son: ')
+    finalList = result[3]
+    print(lt.getElement(finalList, 1))
+    print(lt.getElement(finalList, 2))
+    print(lt.getElement(finalList, 3))
+    print(lt.getElement(finalList, (lt.size(finalList)-2)))
+    print(lt.getElement(finalList, (lt.size(finalList)-1)))
+    print(lt.getElement(finalList, (lt.size(finalList)-0)))
+
+
 def printMenu():
     print("Bienvenido")
     print("1- Cargar información en el catálogo")
@@ -45,7 +68,8 @@ def printMenu():
     print("6- Contar los avistamientos en una zona geografica")
     print("7- Visualizar los avistamientos de una zona geográfica")
 
-catalog = None
+
+analyzer = None
 
 """
 Menu principal
@@ -65,10 +89,13 @@ while True:
         print(lt.getElement(analyzer["UFOS"], -1))
         print(lt.getElement(analyzer["UFOS"], -2))
         print(lt.getElement(analyzer["UFOS"], -3))
-        print('La altura del arbol de ciudades es de :' + str(om.height(analyzer['cityIndex'])))
+        print(om.keySet(analyzer['longitudeIndex']))
 
     elif int(inputs[0]) == 2:
-        pass
+
+        inputCity = input('Digite el nombre de la ciudad de la cual desea consultar los avistamientos: ')
+        result = controller.findSightingsCity(analyzer, inputCity)
+        printFindCitySightings(result)
 
     elif int(inputs[0]) == 3:
         pass
