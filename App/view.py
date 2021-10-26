@@ -58,6 +58,29 @@ def printFindCitySightings(result):
     print(lt.getElement(finalList, (lt.size(finalList)-0)))
 
 
+def printCountSightingsByHour(result):
+
+    print('Hay ' + str(result[0]) + ' horas de avistamientos diferentes regustradas')
+    lst1 = result[1]
+    lst2 = result[3]
+    print('Las ultimas 5 horas de avistamientos y su numero de avistamientos asociados son: ')
+    print(lt.getElement(lst1, 1))
+    print(lt.getElement(lst1, 2))
+    print(lt.getElement(lst1, 3))
+    print(lt.getElement(lst1, 4))
+    print(lt.getElement(lst1, 5))
+
+    print('-----------------------------------------------------------------------------------------------------------------------')
+    print('En el rango dado el total de avistamientos es: ' + str(result[2]))
+    print('Los primeros y ultimos 3 avistamientos cronologicamente de el rango de horas dadas son: ')
+    print(lt.getElement(lst2, 1))
+    print(lt.getElement(lst2, 2))
+    print(lt.getElement(lst2, 3))
+    print(lt.getElement(lst2, -2))
+    print(lt.getElement(lst2, -1))
+    print(lt.getElement(lst2, lt.size(lst2)))
+
+
 def printMenu():
     print("Bienvenido")
     print("1- Cargar información en el catálogo")
@@ -89,7 +112,6 @@ while True:
         print(lt.getElement(analyzer["UFOS"], -1))
         print(lt.getElement(analyzer["UFOS"], -2))
         print(lt.getElement(analyzer["UFOS"], -3))
-        print(om.keySet(analyzer['longitudeIndex']))
 
     elif int(inputs[0]) == 2:
 
@@ -101,7 +123,11 @@ while True:
         pass
 
     elif int(inputs[0]) == 4:
-        pass
+
+        li = input('Limite inicial de formato HH:MM : ')
+        lf = input('LImite final de formato HH:MM : ')
+        result = controller.countSightingsByHour(analyzer, li, lf)
+        printCountSightingsByHour(result)
 
     elif int(inputs[0]) == 5:
         pass

@@ -113,6 +113,7 @@ def addUfo(analyzer, Datetime, city, state, country, shape,
         lstCitySecs = lt.newList('ARRAY_LIST')
         dictCitySecs['Datetime'] = Datetime
         dictCitySecs['Country'] = country
+        dictCitySecs['State'] = state
         dictCitySecs['City'] = city
         dictCitySecs['Shape'] = shape
         dictCitySecs['DurationSec'] = durationSec
@@ -124,6 +125,7 @@ def addUfo(analyzer, Datetime, city, state, country, shape,
         dictCitySecs = {}
         dictCitySecs['Datetime'] = Datetime
         dictCitySecs['Country'] = country
+        dictCitySecs['State'] = state
         dictCitySecs['City'] = city
         dictCitySecs['Shape'] = shape
         dictCitySecs['DurationSec'] = durationSec
@@ -138,6 +140,7 @@ def addUfo(analyzer, Datetime, city, state, country, shape,
         lstCityHour = lt.newList('ARRAY_LIST')
         dictCityHour['Datetime'] = Datetime
         dictCityHour['Country'] = country
+        dictCityHour['State'] = state
         dictCityHour['City'] = city
         dictCityHour['Shape'] = shape
         dictCityHour['DurationSec'] = durationSec
@@ -149,6 +152,7 @@ def addUfo(analyzer, Datetime, city, state, country, shape,
         dictCityHour = {}
         dictCityHour['Datetime'] = Datetime
         dictCityHour['Country'] = country
+        dictCityHour['State'] = state
         dictCityHour['City'] = city
         dictCityHour['Shape'] = shape
         dictCityHour['DurationSec'] = durationSec
@@ -232,6 +236,44 @@ def findSightingsCity(analyzer, city):
     return totalCities, sorted_list, totalCitySightings, sorted_city
 
 
+def countSightingsByHour(analyzer, li, lf):
+
+    totalTimes = om.keySet(analyzer['hourIndex'])
+    timesCounter = 0
+    lstTimes = lt.newList('ARRAY_LIST')
+    for time in lt.iterator(totalTimes):
+        dictTemp = {}
+        entryTime = om.get(analyzer['hourIndex'], time)
+        timeList = me.getValue(entryTime)
+        if lt.size(timeList) > 0:
+            timesCounter += 1
+            dictTemp[time] = lt.size(timeList)
+            lt.addLast(lstTimes, dictTemp)
+
+    sorted_list = ms.sort(lstTimes, cmpHourBySightings)
+
+    rangeKeys = om.keys(analyzer['hourIndex'], li, lf)
+    totalRangeSightings = 0
+    lstRange = lt.newList('ARRAY_LIST')
+    for key in lt.iterator(rangeKeys):
+        entryKey = om.get(analyzer['hourIndex'], key)
+        lstKey = me.getValue(entryKey)
+        if lt.size(lstKey) > 0:
+            totalRangeSightings += lt.size(lstKey)
+            for element in lt.iterator(lstKey):
+                dictTemp = {}
+                dictTemp['Datetime'] = element['Datetime']
+                dictTemp['City'] = element['City']
+                dictTemp['State'] = element['State']
+                dictTemp['Shape'] = element['Shape']
+                dictTemp['DurationSec'] = element['DurationSec']
+                lt.addLast(lstRange, dictTemp)
+
+    finalList = ms.sort(lstRange, cmpByDatetime)
+
+    return timesCounter, sorted_list, totalRangeSightings, finalList
+
+
 # Funciones utilizadas para comparar elementos dentro de una lista
 
 
@@ -308,3 +350,15 @@ def cmpByDatetime(city1, city2):
         return False
     else:
         return True
+
+
+def cmpHourBySightings(hour1, hour2):
+
+    hour1F = (list(hour1.keys()))[0]
+    hour2F = (list(hour2.keys()))[0]
+    r = True
+    if hour1F > hour2F:
+        r = True
+    else:
+        r = False
+    return r

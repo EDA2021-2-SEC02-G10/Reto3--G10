@@ -62,3 +62,8 @@ def loadData(analyzer):
 def findSightingsCity(analyzer, city):
 
     return model.findSightingsCity(analyzer, city)
+
+
+def countSightingsByHour(analyzer, li, lf):
+
+    return model.countSightingsByHour(analyzer, li, lf)
