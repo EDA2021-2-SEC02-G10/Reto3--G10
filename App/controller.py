@@ -51,7 +51,9 @@ def loadData(analyzer):
     input_file = csv.DictReader(open(ufosfile, encoding="utf-8"))
     for row in input_file:
         model.addUfo(analyzer, row['datetime'], row['city'], row['state'], row['country'], row['shape'],
-                     (row['duration (seconds)']), row['duration (hours/min)'], row['date posted'], row['latitude'], row['longitude'])
+                     (row['duration (seconds)']), row['duration (hours/min)'],
+                     row['date posted'], float(row['latitude']), float(row['longitude']))
+
     return analyzer
 
 # Funciones de ordenamiento
@@ -67,3 +69,13 @@ def findSightingsCity(analyzer, city):
 def countSightingsByHour(analyzer, li, lf):
 
     return model.countSightingsByHour(analyzer, li, lf)
+
+
+def findSightingsByRegion(analyzer, loni, lonf, lati, latf):
+
+    return model.findSightingsByRegion(analyzer, loni, lonf, lati, latf)
+
+
+def seeSightingsByRegion(analyzer, loni, lonf, lati, latf):
+
+    return model.seeSightingsByRegion(analyzer, loni, lonf, lati, latf)

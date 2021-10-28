@@ -33,6 +33,8 @@ from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import mergesort as ms
 assert cf
+import folium
+import webbrowser
 
 """
 Se define la estructura de un catálogo de videos. El catálogo tendrá dos listas, una para los videos, otra para las categorias de
@@ -274,6 +276,49 @@ def countSightingsByHour(analyzer, li, lf):
     return timesCounter, sorted_list, totalRangeSightings, finalList
 
 
+def findSightingsByRegion(analyzer, loni, lonf, lati, latf):
+
+    # Creacion de lista de avisamientos en la region
+    longitudeValues = om.keys(analyzer['longitudeIndex'], float(loni), float(lonf))
+    lstRangeElements = lt.newList('ARRAY_LIST')
+    for longitude in lt.iterator(longitudeValues):
+        longitudeEntry = om.get(analyzer['longitudeIndex'], longitude)
+        longitudeLst = me.getValue(longitudeEntry)
+        for element in lt.iterator(longitudeLst):
+            if (element['Latitude']) >= (lati) and (element['Latitude']) <= (latf):
+                dictTemp = {}
+                dictTemp['Longitude'] = longitude
+                dictTemp['Latitude'] = element['Latitude']
+                dictTemp['Datetime'] = element['Datetime']
+                dictTemp['Country'] = element['Country']
+                dictTemp['City'] = element['City']
+                dictTemp['DurationSec'] = element['DurationSec']
+                dictTemp['Shape'] = element['Shape']
+                lt.addLast(lstRangeElements, dictTemp)
+
+    sightingsRange = lt.size(lstRangeElements)
+    sorted_list = ms.sort(lstRangeElements, cmpByDatetime)
+
+    return sightingsRange, sorted_list
+
+
+def seeSightingsByRegion(analyzer, loni, lonf, lati, latf):
+
+    result = findSightingsByRegion(analyzer, loni, lonf, lati, latf)
+
+    midpointLon = (loni + lonf)/2
+    midpointLat = (lati + latf)/2
+    myMap = folium.Map(location=[midpointLat, midpointLon], zoom_start=7)
+    for sighting in lt.iterator(result[1]):
+        lat = int(sighting['Latitude'])
+        lon = int(sighting['Longitude'])
+        folium.Marker([lat, lon], popup="UFO").add_to(myMap)
+
+    myMap.save("map.html")
+    webbrowser.open("map.html")
+
+    return result[0], result[1]
+
 # Funciones utilizadas para comparar elementos dentro de una lista
 
 
@@ -361,4 +406,21 @@ def cmpHourBySightings(hour1, hour2):
         r = True
     else:
         r = False
+    return r
+
+
+def cmpByLocation(loc1, loc2):
+
+    if loc1['Longitude'] > loc2['Longitude']:
+        r = True
+
+    elif loc1['Longitude'] == loc2['Longitude']:
+        if loc1['Latitude'] > loc2['Latitude']:
+            r = True
+
+        else:
+            r = False
+    else:
+        r = False
+
     return r

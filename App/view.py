@@ -60,7 +60,7 @@ def printFindCitySightings(result):
 
 def printCountSightingsByHour(result):
 
-    print('Hay ' + str(result[0]) + ' horas de avistamientos diferentes regustradas')
+    print('Hay ' + str(result[0]) + ' horas de avistamientos diferentes registradas')
     lst1 = result[1]
     lst2 = result[3]
     print('Las ultimas 5 horas de avistamientos y su numero de avistamientos asociados son: ')
@@ -79,6 +79,19 @@ def printCountSightingsByHour(result):
     print(lt.getElement(lst2, -2))
     print(lt.getElement(lst2, -1))
     print(lt.getElement(lst2, lt.size(lst2)))
+
+
+def printSightingsByRegion(result):
+
+    print('En la region geografica hay ' + str(result[0]) + ' avistamientos')
+    lst = result[1]
+    print('Los primeros y ultimos 3 avistamientos en orden de ubicacion cronologico son: ')
+    print(lt.getElement(lst, 1))
+    print(lt.getElement(lst, 2))
+    print(lt.getElement(lst, 3))
+    print(lt.getElement(lst, -2))
+    print(lt.getElement(lst, -1))
+    print(lt.getElement(lst, lt.size(lst)))
 
 
 def printMenu():
@@ -133,10 +146,18 @@ while True:
         pass
 
     elif int(inputs[0]) == 6:
-        pass
+
+        loni = float(input('Limite minimo de longitud: '))
+        lonf = float(input('Limite maximo de longitud: '))
+        lati = float(input('Limite minimo de latitud: '))
+        latf = float(input('Limite maximo de latitud: '))
+        result = controller.findSightingsByRegion(analyzer, loni, lonf, lati, latf)
+        printSightingsByRegion(result)
 
     elif int(inputs[0]) == 7:
-        pass
+
+        result = controller.seeSightingsByRegion(analyzer, loni, lonf, lati, latf)
+        printSightingsByRegion(result)
 
     else:
         sys.exit(0)
