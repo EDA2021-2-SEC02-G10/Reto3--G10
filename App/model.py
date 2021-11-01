@@ -26,6 +26,8 @@
 
 from datetime import datetime
 from os import pardir
+from DISClib.DataStructures.bst import maxKey, maxKeyNode
+from DISClib.DataStructures.rbt import maxKeyTree
 import config as cf
 from DISClib.ADT import list as lt
 from DISClib.ADT import orderedmap as om
@@ -33,7 +35,7 @@ from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import mergesort as ms
 assert cf
-import folium
+#import folium 
 import webbrowser
 
 """
@@ -114,23 +116,21 @@ def addUfo(analyzer, Datetime, city, state, country, shape,
         dictCitySecs = {}
         lstCitySecs = lt.newList('ARRAY_LIST')
         dictCitySecs['Datetime'] = Datetime
-        dictCitySecs['Country'] = country
-        dictCitySecs['State'] = state
         dictCitySecs['City'] = city
-        dictCitySecs['Shape'] = shape
+        dictCitySecs['Country'] = country
         dictCitySecs['DurationSec'] = durationSec
+        dictCitySecs['Shape'] = shape
         lt.addLast(lstCitySecs, dictCity)
-        om.put(analyzer['secondsIndex'], durationSec, lstCitySecs)
+        om.put(analyzer['secondsIndex'], (durationSec), lstCitySecs)
     else:
         durationSecsEntry = om.get(analyzer['secondsIndex'], durationSec)
         durationSecsList = me.getValue(durationSecsEntry)
         dictCitySecs = {}
         dictCitySecs['Datetime'] = Datetime
-        dictCitySecs['Country'] = country
-        dictCitySecs['State'] = state
         dictCitySecs['City'] = city
-        dictCitySecs['Shape'] = shape
+        dictCitySecs['Country'] = country
         dictCitySecs['DurationSec'] = durationSec
+        dictCitySecs['Shape'] = shape
         lt.addLast(durationSecsList, dictCitySecs)
 
     # Creacion indice de hora/minuto
@@ -166,10 +166,10 @@ def addUfo(analyzer, Datetime, city, state, country, shape,
         dictDate = {}
         dateLst = lt.newList('ARRAY_LIST')
         dictDate['Datetime'] = Datetime
-        dictDate['Country'] = country
         dictDate['City'] = city
-        dictDate['Shape'] = shape
+        dictDate['Country'] = country
         dictDate['DurationSec'] = durationSec
+        dictDate['Shape'] = shape
         lt.addLast(dateLst, dictDate)
         om.put(analyzer['dateIndex'], date, dateLst)
     else:
@@ -177,10 +177,10 @@ def addUfo(analyzer, Datetime, city, state, country, shape,
         dateLst = me.getValue(dateEntry)
         dictDate = {}
         dictDate['Datetime'] = Datetime
-        dictDate['Country'] = country
         dictDate['City'] = city
-        dictDate['Shape'] = shape
+        dictDate['Country'] = country
         dictDate['DurationSec'] = durationSec
+        dictDate['Shape'] = shape
         lt.addLast(dateLst, dictDate)
 
     # Creacion de indice de longitud
@@ -237,6 +237,22 @@ def findSightingsCity(analyzer, city):
 
     return totalCities, sorted_list, totalCitySightings, sorted_city
 
+def Sightingsbyseconds (analyzer, secondsmin, secondsmax):
+    total_avistamientos = 0
+    duracion_mas_larga = om.maxKey(analyzer['secondsIndex'])
+    valoresmaximo = om.get(analyzer['secondsIndex'],duracion_mas_larga)
+    valoresmaximo2 = me.getValue(valoresmaximo)
+    total_avistamientos_maximo = lt.size(valoresmaximo2)
+
+    intervalo =om.values(analyzer['secondsIndex'],secondsmin,secondsmax)
+    lista_avistamientos = lt.newList('ARRAY_LIST')
+    for x in lt.iterator(intervalo):
+        total_avistamientos += lt.size(x)
+        for y in lt.iterator(x):
+            lt.addLast(lista_avistamientos,y)
+
+    return(duracion_mas_larga,total_avistamientos_maximo,lista_avistamientos,total_avistamientos)
+  
 
 def countSightingsByHour(analyzer, li, lf):
 
@@ -275,6 +291,21 @@ def countSightingsByHour(analyzer, li, lf):
 
     return timesCounter, sorted_list, totalRangeSightings, finalList
 
+def Sightingsbydate (analyzer, date1, date2):
+    total_avistamientos = 0
+    fecha_mas_pequeña = om.minKey(analyzer['dateIndex'])
+    fechaminima = om.get(analyzer['dateIndex'],fecha_mas_pequeña)
+    fechaminima2 = me.getValue(fechaminima)
+    total_avistamientos_minimo = lt.size(fechaminima2)
+    
+    intervalofechas = om.values(analyzer['dateIndex'],date1,date2)
+    lista_avistamientos = lt.newList('ARRAY_LIST')
+    for x in lt.iterator(intervalofechas):
+        total_avistamientos += lt.size(x)
+        for y in lt.iterator(x):
+            lt.addLast(lista_avistamientos,y)
+
+    return (fecha_mas_pequeña,total_avistamientos_minimo,lista_avistamientos,total_avistamientos)
 
 def findSightingsByRegion(analyzer, loni, lonf, lati, latf):
 
@@ -308,17 +339,16 @@ def seeSightingsByRegion(analyzer, loni, lonf, lati, latf):
 
     midpointLon = (loni + lonf)/2
     midpointLat = (lati + latf)/2
-    myMap = folium.Map(location=[midpointLat, midpointLon], zoom_start=7)
+  #  myMap = folium.Map(location=[midpointLat, midpointLon], zoom_start=7)
     for sighting in lt.iterator(result[1]):
         lat = int(sighting['Latitude'])
         lon = int(sighting['Longitude'])
-        folium.Marker([lat, lon], popup="UFO").add_to(myMap)
+       # folium.Marker([lat, lon], popup="UFO").add_to(myMap)
 
     myMap.save("map.html")
     webbrowser.open("map.html")
 
     return result[0], result[1]
-
 # Funciones utilizadas para comparar elementos dentro de una lista
 
 
@@ -332,11 +362,12 @@ def compareCity(city1, city2):
         return -1
 
 
-def compareDurationSec(city1, city2):
-
-    if (city1 == city2):
+def compareDurationSec(city1 , city2):
+    a = float(city1)
+    b = float(city2)
+    if (a == b):
         return 0
-    elif (city1 > city2):
+    elif (a > b):
         return 1
     else:
         return -1
@@ -385,6 +416,7 @@ def cmpCitiesBySightings(city1, city2):
     return r
 
 
+
 def cmpByDatetime(city1, city2):
 
     date1 = city1['Datetime']
@@ -424,3 +456,4 @@ def cmpByLocation(loc1, loc2):
         r = False
 
     return r
+

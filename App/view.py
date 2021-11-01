@@ -133,8 +133,20 @@ while True:
         printFindCitySightings(result)
 
     elif int(inputs[0]) == 3:
-        pass
+        secondsmin = input('Ingrese el límite inferior de segundos (mínimo): ')
+        secondsmax = input('Ingrese el límite superior de segundos (máximo): ')
+        result = controller.Sightingsbyseconds(analyzer,secondsmin,secondsmax)
 
+        print('La duración de avistamiento más larga registrada es: ' + str(result[0]) + ' y hay un total de ' + str(result[1]) + ' avistamientos con esta duración.')
+        print('Hay ' + str(result[3]) + ' avistamientos que duren entre ' + str(secondsmin) + ' y ' + str(secondsmax) + ' segundos.')
+        print ('Los tres primeros avistamientos dentro del rango son: ')
+        print (result[2]['elements'][0])
+        print (result[2]['elements'][1])
+        print (result[2]['elements'][2])
+        print ('Los tres últimos avistamientos dentro del rango son: ')
+        print (result[2]['elements'][-3])
+        print (result[2]['elements'][-2])
+        print (result[2]['elements'][-1])
     elif int(inputs[0]) == 4:
 
         li = input('Limite inicial de formato HH:MM : ')
@@ -143,7 +155,20 @@ while True:
         printCountSightingsByHour(result)
 
     elif int(inputs[0]) == 5:
-        pass
+        date1 = input('Ingrese el límite inferior de fechas en formato AAAA-MM-DD: ')
+        date2 = input ('Ingrese el límite superior de fechas en formato AAAA-MM-DD: ')
+        result = controller.Sightingsbydate(analyzer,date1,date2)
+        print ('La fecha de avistamiento más antigua registrada es: ' + str(result[0]) + ' y hay un total de ' + str(result[1]) + ' avistamientos con esta fecha.')
+        print('Hay ' + str(result[3]) + ' avistamientos dentor del rango de fechas de  ' + str(date1) + ' y ' + str(date2) + '.')
+        print ('Los tres primeros avistamientos dentro del rango son: ')
+        print (result[2]['elements'][0])
+        print (result[2]['elements'][1])
+        print (result[2]['elements'][2])
+        print ('Los tres últimos avistamientos dentro del rango son: ')
+        print (result[2]['elements'][-3])
+        print (result[2]['elements'][-2])
+        print (result[2]['elements'][-1])
+
 
     elif int(inputs[0]) == 6:
 
