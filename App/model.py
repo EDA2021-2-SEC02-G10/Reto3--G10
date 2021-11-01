@@ -113,25 +113,29 @@ def addUfo(analyzer, Datetime, city, state, country, shape,
 
     # Creacion de arbol por duracion (Segundos)
     if om.contains(analyzer['secondsIndex'], durationSec) is False:
-        dictCitySecs = {}
         lstCitySecs = lt.newList('ARRAY_LIST')
+        dictCitySecs = {}
         dictCitySecs['Datetime'] = Datetime
-        dictCitySecs['City'] = city
         dictCitySecs['Country'] = country
+        dictCitySecs['City'] = city
         dictCitySecs['DurationSec'] = durationSec
         dictCitySecs['Shape'] = shape
-        lt.addLast(lstCitySecs, dictCity)
-        om.put(analyzer['secondsIndex'], (durationSec), lstCitySecs)
+        lt.addLast(lstCitySecs, dictCitySecs)
+        ms.sort(lstCitySecs,cmpByPlace)
+        om.put(analyzer['secondsIndex'], durationSec, lstCitySecs)
+
     else:
         durationSecsEntry = om.get(analyzer['secondsIndex'], durationSec)
         durationSecsList = me.getValue(durationSecsEntry)
         dictCitySecs = {}
         dictCitySecs['Datetime'] = Datetime
-        dictCitySecs['City'] = city
         dictCitySecs['Country'] = country
+        dictCitySecs['City'] = city
         dictCitySecs['DurationSec'] = durationSec
         dictCitySecs['Shape'] = shape
         lt.addLast(durationSecsList, dictCitySecs)
+        ms.sort(durationSecsList,cmpByPlace)
+        
 
     # Creacion indice de hora/minuto
     hourList = Datetime.split(' ')
@@ -250,7 +254,6 @@ def Sightingsbyseconds (analyzer, secondsmin, secondsmax):
         total_avistamientos += lt.size(x)
         for y in lt.iterator(x):
             lt.addLast(lista_avistamientos,y)
-
     return(duracion_mas_larga,total_avistamientos_maximo,lista_avistamientos,total_avistamientos)
   
 
@@ -457,3 +460,18 @@ def cmpByLocation(loc1, loc2):
 
     return r
 
+def cmpByPlace(place1, place2):
+
+    if place1['City'] < place2['City']:
+        r = True
+
+    elif place1['City'] == place2['City']:
+        if place1['Country'] < place2['Country']:
+            r = True
+
+        else:
+            r = False
+    else:
+        r = False
+
+    return r

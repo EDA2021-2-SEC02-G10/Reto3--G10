@@ -159,7 +159,7 @@ while True:
         date2 = input ('Ingrese el límite superior de fechas en formato AAAA-MM-DD: ')
         result = controller.Sightingsbydate(analyzer,date1,date2)
         print ('La fecha de avistamiento más antigua registrada es: ' + str(result[0]) + ' y hay un total de ' + str(result[1]) + ' avistamientos con esta fecha.')
-        print('Hay ' + str(result[3]) + ' avistamientos dentor del rango de fechas de  ' + str(date1) + ' y ' + str(date2) + '.')
+        print('Hay ' + str(result[3]) + ' avistamientos dentor del rango de fechas de  ' + str(date1) + ' y ' + str(date2) + ' segundos.')
         print ('Los tres primeros avistamientos dentro del rango son: ')
         print (result[2]['elements'][0])
         print (result[2]['elements'][1])
