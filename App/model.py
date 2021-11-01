@@ -116,8 +116,8 @@ def addUfo(analyzer, Datetime, city, state, country, shape,
         lstCitySecs = lt.newList('ARRAY_LIST')
         dictCitySecs = {}
         dictCitySecs['Datetime'] = Datetime
-        dictCitySecs['Country'] = country
         dictCitySecs['City'] = city
+        dictCitySecs['Country'] = country
         dictCitySecs['DurationSec'] = durationSec
         dictCitySecs['Shape'] = shape
         lt.addLast(lstCitySecs, dictCitySecs)
@@ -129,8 +129,8 @@ def addUfo(analyzer, Datetime, city, state, country, shape,
         durationSecsList = me.getValue(durationSecsEntry)
         dictCitySecs = {}
         dictCitySecs['Datetime'] = Datetime
-        dictCitySecs['Country'] = country
         dictCitySecs['City'] = city
+        dictCitySecs['Country'] = country
         dictCitySecs['DurationSec'] = durationSec
         dictCitySecs['Shape'] = shape
         lt.addLast(durationSecsList, dictCitySecs)
