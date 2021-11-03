@@ -169,7 +169,6 @@ while True:
         print (result[2]['elements'][-2])
         print (result[2]['elements'][-1])
 
-
     elif int(inputs[0]) == 6:
 
         loni = float(input('Limite minimo de longitud: '))

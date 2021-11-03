@@ -65,17 +65,22 @@ def findSightingsCity(analyzer, city):
 
     return model.findSightingsCity(analyzer, city)
 
-def Sightingsbyseconds (analyzer, secondsmin,secondsmax):
+
+def Sightingsbyseconds(analyzer, secondsmin,secondsmax):
 
     return model.Sightingsbyseconds(analyzer,secondsmin,secondsmax)
+
 
 def countSightingsByHour(analyzer, li, lf):
 
     return model.countSightingsByHour(analyzer, li, lf)
 
+
 def Sightingsbydate (analyzer,date1,date2):
 
     return model.Sightingsbydate (analyzer,date1,date2)
+
+
 def findSightingsByRegion(analyzer, loni, lonf, lati, latf):
 
     return model.findSightingsByRegion(analyzer, loni, lonf, lati, latf)

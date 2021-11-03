@@ -25,7 +25,7 @@
  """
 
 from datetime import datetime
-from os import pardir
+from os import pardir, truncate
 from DISClib.DataStructures.bst import maxKey, maxKeyNode
 from DISClib.DataStructures.rbt import maxKeyTree
 import config as cf
@@ -35,7 +35,7 @@ from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import mergesort as ms
 assert cf
-#import folium 
+import folium 
 import webbrowser
 
 """
@@ -135,7 +135,6 @@ def addUfo(analyzer, Datetime, city, state, country, shape,
         dictCitySecs['Shape'] = shape
         lt.addLast(durationSecsList, dictCitySecs)
         ms.sort(durationSecsList,cmpByPlace)
-        
 
     # Creacion indice de hora/minuto
     hourList = Datetime.split(' ')
@@ -241,7 +240,8 @@ def findSightingsCity(analyzer, city):
 
     return totalCities, sorted_list, totalCitySightings, sorted_city
 
-def Sightingsbyseconds (analyzer, secondsmin, secondsmax):
+
+def Sightingsbyseconds(analyzer, secondsmin, secondsmax):
     total_avistamientos = 0
     duracion_mas_larga = om.maxKey(analyzer['secondsIndex'])
     valoresmaximo = om.get(analyzer['secondsIndex'],duracion_mas_larga)
@@ -255,7 +255,7 @@ def Sightingsbyseconds (analyzer, secondsmin, secondsmax):
         for y in lt.iterator(x):
             lt.addLast(lista_avistamientos,y)
     return(duracion_mas_larga,total_avistamientos_maximo,lista_avistamientos,total_avistamientos)
-  
+
 
 def countSightingsByHour(analyzer, li, lf):
 
@@ -273,7 +273,11 @@ def countSightingsByHour(analyzer, li, lf):
 
     sorted_list = ms.sort(lstTimes, cmpHourBySightings)
 
-    rangeKeys = om.keys(analyzer['hourIndex'], li, lf)
+    ch = lf[4]
+    chf = str(int(lf[4])+1)
+    lff = lf[:4]+chf
+    print(lff)
+    rangeKeys = om.keys(analyzer['hourIndex'], li, lff)
     totalRangeSightings = 0
     lstRange = lt.newList('ARRAY_LIST')
     for key in lt.iterator(rangeKeys):
@@ -283,6 +287,7 @@ def countSightingsByHour(analyzer, li, lf):
             totalRangeSightings += lt.size(lstKey)
             for element in lt.iterator(lstKey):
                 dictTemp = {}
+                dictTemp['HH:MM'] = key
                 dictTemp['Datetime'] = element['Datetime']
                 dictTemp['City'] = element['City']
                 dictTemp['State'] = element['State']
@@ -290,9 +295,10 @@ def countSightingsByHour(analyzer, li, lf):
                 dictTemp['DurationSec'] = element['DurationSec']
                 lt.addLast(lstRange, dictTemp)
 
-    finalList = ms.sort(lstRange, cmpByDatetime)
+    finalList = ms.sort(lstRange, cmpByHour)
 
     return timesCounter, sorted_list, totalRangeSightings, finalList
+
 
 def Sightingsbydate (analyzer, date1, date2):
     total_avistamientos = 0
@@ -309,6 +315,7 @@ def Sightingsbydate (analyzer, date1, date2):
             lt.addLast(lista_avistamientos,y)
 
     return (fecha_mas_pequeña,total_avistamientos_minimo,lista_avistamientos,total_avistamientos)
+
 
 def findSightingsByRegion(analyzer, loni, lonf, lati, latf):
 
@@ -342,11 +349,11 @@ def seeSightingsByRegion(analyzer, loni, lonf, lati, latf):
 
     midpointLon = (loni + lonf)/2
     midpointLat = (lati + latf)/2
-  #  myMap = folium.Map(location=[midpointLat, midpointLon], zoom_start=7)
+    myMap = folium.Map(location=[midpointLat, midpointLon], zoom_start=7)
     for sighting in lt.iterator(result[1]):
         lat = int(sighting['Latitude'])
         lon = int(sighting['Longitude'])
-       # folium.Marker([lat, lon], popup="UFO").add_to(myMap)
+        folium.Marker([lat, lon], popup="UFO").add_to(myMap)
 
     myMap.save("map.html")
     webbrowser.open("map.html")
@@ -418,6 +425,27 @@ def cmpCitiesBySightings(city1, city2):
 
     return r
 
+
+def cmpByHour(hour1, hour2):
+
+    hour1Lst = hour1['HH:MM'].split(':')
+    h1 = hour1Lst[0]
+    m1 = hour1Lst[1]
+    hour2Lst = hour2['HH:MM'].split(':')
+    h2 = hour2Lst[0]
+    m2 = hour2Lst[1]
+    if h1 > h2:
+        r = False
+    elif h1 < h2:
+        r = True
+    elif m1 > m2:
+        r = False
+    elif m1 < m2:
+        r = True
+    else:
+        r = True
+
+    return r
 
 
 def cmpByDatetime(city1, city2):
