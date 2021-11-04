@@ -35,7 +35,7 @@ from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import mergesort as ms
 assert cf
-#import folium 
+import folium 
 import webbrowser
 
 """
@@ -275,7 +275,6 @@ def countSightingsByHour(analyzer, li, lf):
     ch = lf[4]
     chf = str(int(lf[4])+1)
     lff = lf[:4]+chf
-    print(lff)
     rangeKeys = om.keys(analyzer['hourIndex'], li, lff)
     totalRangeSightings = 0
     lstRange = lt.newList('ARRAY_LIST')
@@ -348,11 +347,11 @@ def seeSightingsByRegion(analyzer, loni, lonf, lati, latf):
 
     midpointLon = (loni + lonf)/2
     midpointLat = (lati + latf)/2
-  #  myMap = folium.Map(location=[midpointLat, midpointLon], zoom_start=7)
+    myMap = folium.Map(location=[midpointLat, midpointLon], zoom_start=7)
     for sighting in lt.iterator(result[1]):
         lat = int(sighting['Latitude'])
         lon = int(sighting['Longitude'])
-   #     folium.Marker([lat, lon], popup="UFO").add_to(myMap)
+        folium.Marker([lat, lon], popup="UFO").add_to(myMap)
 
     myMap.save("map.html")
     webbrowser.open("map.html")
