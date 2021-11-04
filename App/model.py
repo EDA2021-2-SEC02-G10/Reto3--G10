@@ -35,7 +35,7 @@ from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import mergesort as ms
 assert cf
-import folium 
+#import folium 
 import webbrowser
 
 """
@@ -121,7 +121,6 @@ def addUfo(analyzer, Datetime, city, state, country, shape,
         dictCitySecs['DurationSec'] = durationSec
         dictCitySecs['Shape'] = shape
         lt.addLast(lstCitySecs, dictCitySecs)
-        ms.sort(lstCitySecs,cmpByPlace)
         om.put(analyzer['secondsIndex'], durationSec, lstCitySecs)
 
     else:
@@ -134,7 +133,6 @@ def addUfo(analyzer, Datetime, city, state, country, shape,
         dictCitySecs['DurationSec'] = durationSec
         dictCitySecs['Shape'] = shape
         lt.addLast(durationSecsList, dictCitySecs)
-        ms.sort(durationSecsList,cmpByPlace)
 
     # Creacion indice de hora/minuto
     hourList = Datetime.split(' ')
@@ -252,7 +250,8 @@ def Sightingsbyseconds(analyzer, secondsmin, secondsmax):
     lista_avistamientos = lt.newList('ARRAY_LIST')
     for x in lt.iterator(intervalo):
         total_avistamientos += lt.size(x)
-        for y in lt.iterator(x):
+        sorted_list = ms.sort(x,cmpByPlace)
+        for y in lt.iterator(sorted_list):
             lt.addLast(lista_avistamientos,y)
     return(duracion_mas_larga,total_avistamientos_maximo,lista_avistamientos,total_avistamientos)
 
@@ -349,11 +348,11 @@ def seeSightingsByRegion(analyzer, loni, lonf, lati, latf):
 
     midpointLon = (loni + lonf)/2
     midpointLat = (lati + latf)/2
-    myMap = folium.Map(location=[midpointLat, midpointLon], zoom_start=7)
+  #  myMap = folium.Map(location=[midpointLat, midpointLon], zoom_start=7)
     for sighting in lt.iterator(result[1]):
         lat = int(sighting['Latitude'])
         lon = int(sighting['Longitude'])
-        folium.Marker([lat, lon], popup="UFO").add_to(myMap)
+   #     folium.Marker([lat, lon], popup="UFO").add_to(myMap)
 
     myMap.save("map.html")
     webbrowser.open("map.html")
